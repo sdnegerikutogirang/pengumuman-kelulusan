@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Kelulusan</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .box {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      position: relative;
+    }
+    h1 {
+      color: #007BFF;
+    }
+    .lulus {
+      color: green;
+      font-size: 1.5em;
+    }
+    .tidak {
+      color: red;
+      font-size: 1.3em;
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="box" id="resultBox">
+    <h1>Pengumuman Kelulusan</h1>
+    <div id="resultText"></div>
+  </div>
+
+  <canvas class="confetti" id="confettiCanvas"></canvas>
+
+  <script>
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const nama = getQueryParam("nama");
+    const status = getQueryParam("status");
+    const resultText = document.getElementById("resultText");
+
+    if (status === "LULUS" && nama) {
+      resultText.innerHTML = `<p class="lulus">Selamat, <strong>${nama}</strong>!<br>Anda dinyatakan <strong>LULUS</strong>.<br>Semoga sukses di jenjang berikutnya!</p>`;
+      startConfetti();
+    } else if (status === "TIDAK_DITEMUKAN") {
+      resultText.innerHTML = `<p class="tidak">Data tidak ditemukan.<br>Periksa kembali Nama dan NISN Anda.</p>`;
+    } else {
+      resultText.innerHTML = `<p class="tidak">Terjadi kesalahan pada akses laman ini.</p>`;
+    }
+
+    // Animasi confetti
+    function startConfetti() {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confetti = [];
+      const colors = ["#FFC107", "#FF3D00", "#4CAF50", "#2196F3"];
+
+      for (let i = 0; i < 100; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 5 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < confetti.length; i++) {
+          const c = confetti[i];
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+          c.y += c.d;
+
+          if (c.y > canvas.height) {
+            c.y = -10;
+            c.x = Math.random() * canvas.width;
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+    }
+  </script>
+</body>
+</html>

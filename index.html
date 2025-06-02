@@ -145,9 +145,9 @@
       const siswa = kelulusanData.find(s => s.nisn === nisn && s.nama.toLowerCase() === nama);
       const resultDiv = document.getElementById("result");
       if (siswa) {
-        resultDiv.textContent = `Selamat, ${siswa.nama}! Anda dinyatakan LULUS.`;
+        window.location.href = `pengumuman.html?nama=${encodeURIComponent(siswa.nama)}&status=LULUS`;
       } else {
-        resultDiv.textContent = "Data tidak ditemukan. Periksa kembali Nama dan NISN Anda.";
+        window.location.href = `pengumuman.html?status=TIDAK_DITEMUKAN`;
       }
     });
   </script>
